@@ -1,3 +1,4 @@
+{% load static from staticfiles %}
 <!DOCTYPE html>
   <html lang="uk">
 
@@ -10,7 +11,7 @@
     <!-- Include Styles -->
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/bootstrap/3.3.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./css/main.css">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
 
   </head>
 
@@ -75,7 +76,7 @@
             <tbody>
               <tr>
                 <td>1</td>
-                <td><img height="30" width="30" class="img-circle" src="./img/st1.jpg"></td>
+                <td><img height="30" width="30" class="img-circle" src="{% static 'img/st1.jpg' %}"></td>
                 <td><a title="Редагувати" href="{% url 'students_edit' 1 %}">Корост</a></td>
                 <td><a title="Редагувати" href="{% url 'students_edit' 1 %}">Андрій</a></td>
                 <td>2123</td>
@@ -102,7 +103,7 @@
               </tr>
               <tr>
                 <td>1</td>
-                <td><img height="30" width="30" class="img-circle" src="./img/st2.jpg"></td>
+                <td><img height="30" width="30" class="img-circle" src="{% static 'img/st2.jpg' %}"></td>
                 <td><a title="Редагувати" href="#">Янукович</a></td>
                 <td><a title="Редагувати" href="#">Віктор</a></td>
                 <td>2156</td>
@@ -129,7 +130,7 @@
               </tr>
               <tr>
                 <td>1</td>
-                <td><img height="30" width="30" class="img-circle" src="./img/st3.jpg"></td>
+                <td><img height="30" width="30" class="img-circle" src="{% static 'img/st3.jpg' %}"></td>
                 <td><a title="Редагувати" href="#">Ющенко</a></td>
                 <td><a title="Редагувати" href="#">Віктор</a></td>
                 <td>1423</td>
