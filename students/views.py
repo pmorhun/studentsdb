@@ -55,7 +55,8 @@ def groups_list(request):
         'boss': u'Бех',
         'note': u'2 year'},
     )
-    return render(request, 'students/groups_list.html', {'groups': groups})
+
+    return render(request, 'students/groups_list.html', {'groups': groups, 'group_link': request.path})
 
 def groups_add(request):
     return HttpResponse('<h1>Group Add Form</h1>')
