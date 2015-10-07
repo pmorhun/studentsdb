@@ -27,6 +27,10 @@ class Student(models.Model):
         blank=True,
         verbose_name=u"Дата народження",
         null=True)
+    photo = models.ImageField(
+        blank=True,
+        verbose_name=u"Фото",
+        null=True)
     ticket = models.CharField(
         max_length=256,
         blank=False,
@@ -40,4 +44,3 @@ class Student(models.Model):
         :return: student name in django admin
         """
         return u"%s %s" % (self.first_name, self.last_name)
-    
