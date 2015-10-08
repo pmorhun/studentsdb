@@ -2,7 +2,7 @@
 
 from django.shortcuts import render
 from django.http import HttpResponse
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 
 from ..models import Student
 
@@ -23,20 +23,26 @@ def students_list(request):
         reverse_begin = True
 
     # paginate students
-    paginator = Paginator(students, 3)
-    page = request.GET.get('page')
 
-    try:
-        students = paginator.page(page)
-        #num_students = len(students) + (int(page) - 1) * 3
-    except PageNotAnInteger:
-        # If page is not an integer, deliver first page.
-        students = paginator.page(1)
-    except EmptyPage:
-        # If page is out of range (e.g. 9999), deliver last page of results.
-        students = paginator.page(paginator.num_pages)
+    page = request.GET.get('page', '')
+    count_page = len(students) // 3 + 1
 
-    return render(request, 'students/students_list.html', {'students': students, 'reverse_begin': reverse_begin})
+    if page != '':
+        page = int(page)
+    else:
+        page = 1
+    pages = range(1, count_page + 1)
+    if page == 1:
+        students = students.filter(id__gte=1, id__lt=6)
+    elif page > 9999:
+        students = students.filter(id__gte=len(pages) * 3 - 3)
+    else:
+        students = students.filter(id__gte=page * 3 - 3, id__lt=page * 3)
+
+    return render(request, 'students/students_list.html', {'students': students,
+                                                           'reverse_begin': reverse_begin,
+                                                           'pages': pages,
+                                                           'page': page})
 
 
 def students_add(request):
