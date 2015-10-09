@@ -14,7 +14,7 @@ def students_list(request):
     # try to order students list
     reverse_begin = False
     order_by = request.GET.get('order_by', '')
-    if order_by in ('id', 'last_name', 'first_name', 'ticket'):
+    if order_by in ('id', 'last_name', 'first_name', 'student_group', 'ticket'):
         students = students.order_by(order_by)
         if request.GET.get('reverse', '') == '1':
             students = students.reverse()
@@ -24,11 +24,11 @@ def students_list(request):
 
     # paginate students
     paginator = Paginator(students, 3)
-    page = request.GET.get('page')
+    page = request.GET.get('page', '1')
+    number_on_page = (int(page) - 1) * 3
 
     try:
         students = paginator.page(page)
-        #num_students = len(students) + (int(page) - 1) * 3
     except PageNotAnInteger:
         # If page is not an integer, deliver first page.
         students = paginator.page(1)
@@ -36,7 +36,9 @@ def students_list(request):
         # If page is out of range (e.g. 9999), deliver last page of results.
         students = paginator.page(paginator.num_pages)
 
-    return render(request, 'students/students_list.html', {'students': students, 'reverse_begin': reverse_begin})
+    return render(request, 'students/students_list.html', {'students': students,
+                                                           'reverse_begin': reverse_begin,
+                                                           'number_on_page': number_on_page})
 
 
 def students_add(request):
