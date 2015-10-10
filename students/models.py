@@ -8,7 +8,7 @@ class Student(models.Model):
     class Meta(object):
         """ For translate model Student in admin interface"""
         verbose_name = u"Студент"
-        verbose_name_plural = u"Студентів"
+        verbose_name_plural = u"Студенти"
 
     first_name = models.CharField(
         max_length=256,
@@ -76,3 +76,35 @@ class Group(models.Model):
             return u"%s (%s %s)" % (self.title, self.leader.first_name, self.leader.last_name)
         else:
             return u"%s" % (self.title,)
+
+class Exam (models.Model):
+    """examination Model"""
+    class Meta(object):
+        verbose_name = u"Іспит"
+        verbose_name_plural = u"Іспити"
+
+    title = models.CharField(
+        max_length=256,
+        verbose_name=u"Назва предмету",
+        blank=False)
+    date_exam = models.DateField(
+        verbose_name=u"Дата іспиту",
+        blank=True,
+        null=True)
+    teacher = models.CharField(
+        max_length=256,
+        verbose_name=u"Викладач",
+        blank=True,
+        null=True)
+    exam_group = models.ForeignKey('Group',
+        verbose_name=u"Група",
+        blank=False,
+        null=True,
+        on_delete=models.PROTECT)
+    notes = models.TextField(
+        blank=True,
+        verbose_name=u"Додаткові нотатки")
+
+
+    def __unicode__(self):
+        return u"%s - %s, %s" % (self.title, self.exam_group, self.date_exam)
