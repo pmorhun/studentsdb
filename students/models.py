@@ -49,7 +49,7 @@ class Student(models.Model):
         """
         :return: student name in django admin
         """
-        return u"%s %s" % (self.first_name, self.last_name)
+        return u"%s %s" % (self.last_name, self.first_name)
 
 
 class Group(models.Model):
@@ -107,4 +107,36 @@ class Exam (models.Model):
 
 
     def __unicode__(self):
-        return u"%s - %s, %s" % (self.title, self.exam_group, self.date_exam)
+        return u"%s - %s" % (self.title, self.exam_group)
+
+
+class Rating (models.Model):
+    """Rating examination Model"""
+    class Meta(object):
+        verbose_name = u"Оцінка"
+        verbose_name_plural = u"Оцінки"
+
+    ball = models.IntegerField(
+        verbose_name=u"Бал",
+        blank=False)
+    date_exam = models.DateField(
+        verbose_name=u"Дата іспиту",
+        blank=True,
+        null=True)
+    student_ball = models.ForeignKey('Student',
+        verbose_name=u"Студент",
+        blank=False,
+        null=True,
+        on_delete=models.PROTECT)
+    exam_title = models.ForeignKey('Exam',
+        verbose_name=u"Предмет",
+        blank=False,
+        null=True,
+        on_delete=models.PROTECT)
+    notes = models.TextField(
+        blank=True,
+        verbose_name=u"Додаткові нотатки")
+
+
+    def __unicode__(self):
+        return u"%s - %s - %s" % (self.student_ball, self.ball, self.exam_title )

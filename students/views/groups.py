@@ -36,9 +36,11 @@ def groups_list(request):
         # If page is out of range (e.g. 9999), deliver last page of results.
         groups = paginator.page(paginator.num_pages)
 
+
+
     return render(request, 'students/groups_list.html', {'groups': groups,
                                                          'reverse_begin': reverse_begin,
-                                                         'number_on_page': number_on_page})
+                                                          'number_on_page': number_on_page})
 
 def groups_add(request):
     return HttpResponse('<h1>Group Add Form</h1>')

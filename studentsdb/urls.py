@@ -28,13 +28,19 @@ urlpatterns = [
     url(r'^groups/add/$', 'students.views.groups.groups_add', name='groups_add'),
     url(r'^groups/(?P<gid>\d+)/edit/$', 'students.views.groups.groups_edit', name='groups_edit'),
     url(r'^groups/(?P<gid>\d+)/delete/$', 'students.views.groups.groups_delete', name='groups_delete'),
-    url(r'^admin/', include(admin.site.urls)),
     # Exams urls
     url(r'^exams/$', 'students.views.exams.exams_list', name='exams'),
     url(r'^exams/add/$', 'students.views.exams.exams_add', name='exams_add'),
     url(r'^exams/(?P<gid>\d+)/edit/$', 'students.views.exams.exams_edit', name='exams_edit'),
     url(r'^exams/(?P<gid>\d+)/delete/$', 'students.views.exams.exams_delete', name='exams_delete'),
+    # Rating urls
+    url(r'^ratings/$', 'students.views.ratings.ratings_list', name='ratings'),
+    url(r'^ratings/add/$', 'students.views.ratings.ratings_add', name='ratings_add'),
+    url(r'^ratings/(?P<gid>\d+)/edit/$', 'students.views.ratings.ratings_edit', name='ratings_edit'),
+    url(r'^ratings/(?P<gid>\d+)/delete/$', 'students.views.ratings.ratings_delete', name='ratings_delete'),
+    # Admin urls
     url(r'^admin/', include(admin.site.urls)),
+
 
 ]
 
