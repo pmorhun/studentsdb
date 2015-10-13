@@ -11,6 +11,13 @@
 <form action="." method="post" enctype="multipart/form-data" role="form" class="form-horizontal"
       xmlns:request.POST.student_group>
   {% csrf_token %}
+    <div class="form-group {% if errors.last_name %}has-error{% endif %}">
+      <label for="last_name" class="col-sm-2 control-label">Прізвище*</label>
+        <div class="col-sm-10">
+          <input type="text" value="{{ request.POST.last_name }}" name="last_name" id="last_name" placeholder="Іванов" class="form-control" />
+        <span class="help-block">{{ errors.last_name }}</span>
+      </div>
+    </div>
     <div class="form-group {% if errors.first_name %}has-error{% endif%}">
       <label for="first_name" class="col-sm-2 control-label">Ім'я*</label>
       <div class="col-sm-10">
@@ -18,17 +25,10 @@
         <span class="help-block">{{ errors.first_name }}</span>
       </div>
     </div>
-    <div class="form-group {% if errors.last_name %}has-error{% endif %}">
-      <label for="last_name" class="col-sm-2 control-label">Прізвище*</label>
-        <div class="col-sm-10">
-          <input type="text" value="{{ request.POST.first_name }}" name="last_name" id="last_name" placeholder="Іванов" class="form-control" />
-        <span class="help-block">{{ errors.last_name }}</span>
-      </div>
-    </div>
     <div class="form-group {% if errors.middle_name %}has-error{% endif %}">
       <label for="middle_name"class="col-sm-2 control-label">По-батькові</label>
       <div class="col-sm-10">
-        <input type="text" value="{{ request.POST.middle }}" name="middle_name" id="middle_name" placeholder="Іванович" class="form-control" />
+        <input type="text" value="{{ request.POST.middle_name }}" name="middle_name" id="middle_name" placeholder="Іванович" class="form-control" />
         <span class="help-block">{{ errors.middle_name }}</span>
       </div>
     </div>

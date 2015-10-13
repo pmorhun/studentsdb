@@ -26,9 +26,9 @@ def students_list(request):
 
     # paginate students
 
-    paginator = Paginator(students, 3)
+    paginator = Paginator(students, 7)
     page = request.GET.get('page', '1')
-    number_on_page = (int(page) - 1) * 3
+    number_on_page = (int(page) - 1) * 7
 
     try:
         students = paginator.page(page)
@@ -97,17 +97,18 @@ def students_add(request):
                     data['student_group'] = groups[0]
 
             photo = request.FILES.get('photo')
-            if not photo or photo.content_type.split('/')[0] != 'image' or photo.size > 2621440:
-                errors['photo'] = u"Оберіть правильне зображення для фото (не більше 2.5Мб)"
-            else:
-                data['photo'] = photo
+            if photo:
+                if photo.content_type.split('/')[0] != 'image' or photo.size > 2621440:
+                    errors['photo'] = u"Оберіть правильне зображення для фото (не більше 2.5Мб)"
+                else:
+                    data['photo'] = photo
 
             # save student
             if not errors:
                 student = Student(**data)
                 student.save()
                 # redirect to students list
-                return HttpResponseRedirect(u'%s?status_message=Студента успішно додано!' % reverse('home'))
+                return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('home'), u'Студента '+student.last_name+' '+student.first_name+' '+student.middle_name+u' додано!'))
             else:
                 # render form with errors and previous user input
                 return render(request, 'students/students_add.html', {'groups': Group.objects.all().order_by('title'),
