@@ -97,7 +97,9 @@ def students_add(request):
                     data['student_group'] = groups[0]
 
             photo = request.FILES.get('photo')
-            if photo:
+            if not photo or photo.content_type.split('/')[0] != 'image' or photo.size > 2621440:
+                errors['photo'] = u"Оберіть правильне зображення для фото (не більше 2.5Мб)"
+            else:
                 data['photo'] = photo
 
             # save student
