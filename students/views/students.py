@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib import messages
 from datetime import datetime
 
 from ..models import Student, Group
@@ -108,14 +109,18 @@ def students_add(request):
                 student = Student(**data)
                 student.save()
                 # redirect to students list
-                return HttpResponseRedirect(u'%s?status_message=%s' % (reverse('home'), u'Студента '+student.last_name+' '+student.first_name+' '+student.middle_name+u' додано!'))
+                messages.info(request, u'Студента '+student.last_name+' '+student.first_name+' '+student.middle_name+u' додано!')
+                return HttpResponseRedirect(reverse('home'))
             else:
                 # render form with errors and previous user input
+                messages.info(request, u'Будь-ласка, виправте наступні помилки')
                 return render(request, 'students/students_add.html', {'groups': Group.objects.all().order_by('title'),
                                                                       'errors': errors})
+
         elif request.POST.get('cancel_button') is not None:
             # redirect to home page on cancel button
-            return HttpResponseRedirect(u'%s?status_message=Додавання студента скасовано!' % reverse('home'))
+            messages.info(request, u'Додавання студента скасовано!')
+            return HttpResponseRedirect(reverse('home'))
 
     else:
         # initial form render
