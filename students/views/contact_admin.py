@@ -8,6 +8,7 @@ from django.core.urlresolvers import reverse
 from studentsdb.settings import ADMIN_EMAIL
 from django.contrib import messages
 
+
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 
@@ -39,6 +40,7 @@ class ContactForm(forms.Form):
         label=u"Текст повідомлення",
         widget=forms.Textarea)
 
+
 def contact_admin(request):
     # check if form was posted
     if request.method == 'POST':
@@ -50,9 +52,6 @@ def contact_admin(request):
             subject = form.cleaned_data['subject']
             message = form.cleaned_data['message']
             from_email = form.cleaned_data['from_email']
-            #import pdb; pdb.set_trace()
-            #pdb
-
             try:
                 send_mail(subject, message, from_email, [ADMIN_EMAIL], fail_silently=False)
             except Exception:
