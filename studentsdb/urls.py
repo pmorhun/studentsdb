@@ -17,14 +17,14 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from .settings import MEDIA_ROOT, DEBUG
 
-#from students.views.students import StudentUpdateView
+from students.views.students import StudentUpdateView
 
 
 urlpatterns = [
     # Students urls
     url(r'^$', 'students.views.students.students_list', name='home'),
     url(r'^students/add/$', 'students.views.students.students_add', name='students_add'),
-    url(r'^students/(?P<pk>\d+)/edit/$', 'students.views.students.students_edit', name='students_edit'),
+    url(r'^students/(?P<pk>\d+)/edit/$', StudentUpdateView.as_view(), name='students_edit'),
     url(r'^students/(?P<pk>\d+)/delete/$', 'students.views.students.students_delete', name='students_delete'),
     # Groups urls
     url(r'^groups/$', 'students.views.groups.groups_list', name='groups'),
