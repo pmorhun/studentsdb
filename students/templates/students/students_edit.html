@@ -14,6 +14,11 @@
     {% endif %}
 {% endblock %}
 
+
 {% block content %}
-    {% crispy form %}
+    <form action="{% url 'students_edit' 14 %}" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Ok" name="send_button" />
+    </form>
 {% endblock content %}

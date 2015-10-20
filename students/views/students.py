@@ -2,16 +2,18 @@
 
 from datetime import datetime
 
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import messages
 from django.views.generic import UpdateView
 from django.forms import ModelForm
+from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 from crispy_forms.bootstrap import FormActions
+
 
 from ..models import Student, Group
 
@@ -133,8 +135,83 @@ def students_add(request):
         # initial form render
         return render(request, 'students/students_add.html',{'groups': Group.objects.all().order_by('title')})
 
+class StudentUpdateForm(forms.Form):
+
+    """
+    def __init__(self, *args, **kwargs):
+
+        super(StudentUpdateForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper(self)
+        # set form tag attributes
+        self.helper.form_action = reverse('students_edit', kwargs={'pk': kwargs['instance'].id})
+        self.helper.form_method = 'POST'
+        self.helper.form_class = 'form-horizontal'
+        # set form field properties
+        self.helper.help_text_inline = True
+        self.helper.html5_required = True
+        self.helper.label_class = 'col-sm-2 control-label'
+        self.helper.field_class = 'col-sm-10'
+        # add buttons
+        self.helper.layout[-1] = FormActions(
+            Submit('add_button', u'Зберегти', css_class="btn btn-primary"),
+            Submit('cancel_button', u'Скасувати', css_class="btn btn-link"),      )
+    """
+    first_name = forms.CharField(
+        max_length=128,
+        label=u"Ім'я")
+    #last_name = forms.CharField(
+    #    max_length=256,
+    #    label=u"Прізвище")
+    middle_name = forms.CharField(
+        max_length=256,
+        label=u"По-батькові")
+    birthday = forms.DateField(
+        label=u"Дата народження")
+    #photo = forms.ImageField(
+    #    label=u"Фото")
+    ticket = forms.CharField(
+        max_length=25,
+        label=u"Білет")
+    #notes = forms.CharField(
+    #    label=u"Додаткові нотатки")
+    #student_group = forms.ForeignKey('Group', label=u"Група")
+
+    def __init__(self, *args, **kwargs):
+        super(StudentUpdateForm, self).__init__(*args, **kwargs)
+        #import pdb; pdb.set_trace()
+        #pdb
+        self.fields['last_name'] = forms.CharField(initial=Student.objects.get(pk=request.POST['last_name']), label=u"Прізвище")
 
 
+def students_edit(request, pk):
+    # check if form was posted
+
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = StudentUpdateForm(request.POST)
+        # check whether user data is valid:
+        if form.is_valid():
+            # save data
+            id = pk
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
+            middle_name = form.cleaned_data['meddle_name']
+            birthday = form.cleaned_data['birthday']
+            ticket = form.cleaned_data['ticket']
+            Student(id, first_name, last_name, middle_name, birthday, ticket).save()
+            messages.info(request, u'Success')
+            return redirect('/success/')
+
+        #if not valid
+        messages.info(request, u'Виправте наступні помилки')
+        return render(request, 'students/students_edit.html', {'form': form})
+    # if there was not POST render blank form
+    else:
+        form = StudentUpdateForm()
+    return render(request, 'students/students_edit.html', {'form': form})
+
+
+"""
 class StudentUpdateForm(ModelForm):
     class Meta:
         model = Student
@@ -168,11 +245,10 @@ class StudentUpdateView(UpdateView):
             return HttpResponseRedirect(u'%s?status_message=Редагування студента відмінено!'% reverse('home'))
         else:
             return super(StudentUpdateView, self).post(request, *args, **kwargs)
+"""
 
 
 
-def students_edit(request, sid):
-    return HttpResponse('<h1>Edit Student %s</h1>' % sid)
 
 def students_delete(request, sid):
     return HttpResponse('<h1>Delete Student %s</h1>' % sid)
