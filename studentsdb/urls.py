@@ -18,6 +18,8 @@ from django.contrib import admin
 from .settings import MEDIA_ROOT, DEBUG
 
 from students.views.students import StudentUpdateView, StudentDeleteView
+from students.views.groups import GroupAddView, GroupUpdateView, GroupDeleteView
+from students.views.exams import ExamAddView, ExamUpdateView, ExamDeleteView
 
 urlpatterns = [
     # Students urls
@@ -27,14 +29,14 @@ urlpatterns = [
     url(r'^students/(?P<pk>\d+)/delete/$', StudentDeleteView.as_view(), name='students_delete'),
     # Groups urls
     url(r'^groups/$', 'students.views.groups.groups_list', name='groups'),
-    url(r'^groups/add/$', 'students.views.groups.groups_add', name='groups_add'),
-    url(r'^groups/(?P<gid>\d+)/edit/$', 'students.views.groups.groups_edit', name='groups_edit'),
-    url(r'^groups/(?P<gid>\d+)/delete/$', 'students.views.groups.groups_delete', name='groups_delete'),
+    url(r'^groups/add/$', GroupAddView.as_view(), name='groups_add'),
+    url(r'^groups/(?P<pk>\d+)/edit/$', GroupUpdateView.as_view(), name='groups_edit'),
+    url(r'^groups/(?P<pk>\d+)/delete/$', GroupDeleteView.as_view(), name='groups_delete'),
     # Exams urls
     url(r'^exams/$', 'students.views.exams.exams_list', name='exams'),
-    url(r'^exams/add/$', 'students.views.exams.exams_add', name='exams_add'),
-    url(r'^exams/(?P<eid>\d+)/edit/$', 'students.views.exams.exams_edit', name='exams_edit'),
-    url(r'^exams/(?P<eid>\d+)/delete/$', 'students.views.exams.exams_delete', name='exams_delete'),
+    url(r'^exams/add/$', ExamAddView.as_view(), name='exams_add'),
+    url(r'^exams/(?P<pk>\d+)/edit/$', ExamUpdateView.as_view(), name='exams_edit'),
+    url(r'^exams/(?P<pk>\d+)/delete/$', ExamDeleteView.as_view(), name='exams_delete'),
     # Rating urls
     url(r'^ratings/$', 'students.views.ratings.ratings_list', name='ratings'),
     url(r'^ratings/add/$', 'students.views.ratings.ratings_add', name='ratings_add'),
