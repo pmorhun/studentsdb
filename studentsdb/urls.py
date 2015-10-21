@@ -20,6 +20,7 @@ from .settings import MEDIA_ROOT, DEBUG
 from students.views.students import StudentUpdateView, StudentDeleteView
 from students.views.groups import GroupAddView, GroupUpdateView, GroupDeleteView
 from students.views.exams import ExamAddView, ExamUpdateView, ExamDeleteView
+from students.views.ratings import RatingAddView, RatingUpdateView, RatingDeleteView
 
 urlpatterns = [
     # Students urls
@@ -39,9 +40,9 @@ urlpatterns = [
     url(r'^exams/(?P<pk>\d+)/delete/$', ExamDeleteView.as_view(), name='exams_delete'),
     # Rating urls
     url(r'^ratings/$', 'students.views.ratings.ratings_list', name='ratings'),
-    url(r'^ratings/add/$', 'students.views.ratings.ratings_add', name='ratings_add'),
-    url(r'^ratings/(?P<rid>\d+)/edit/$', 'students.views.ratings.ratings_edit', name='ratings_edit'),
-    url(r'^ratings/(?P<rid>\d+)/delete/$', 'students.views.ratings.ratings_delete', name='ratings_delete'),
+    url(r'^ratings/add/$', RatingAddView.as_view(), name='ratings_add'),
+    url(r'^ratings/(?P<pk>\d+)/edit/$', RatingUpdateView.as_view(), name='ratings_edit'),
+    url(r'^ratings/(?P<pk>\d+)/delete/$', RatingDeleteView.as_view(), name='ratings_delete'),
     # Contact Admin Form
     url(r'^contact_admin/$', 'students.views.contact_admin.contact_admin', name='contact_admin'),
 

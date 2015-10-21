@@ -77,7 +77,7 @@ class Group(models.Model):
         else:
             return u"%s" % (self.title,)
 
-class Exam (models.Model):
+class Exam(models.Model):
     """examination Model"""
     class Meta(object):
         verbose_name = u"Іспит"
@@ -110,7 +110,7 @@ class Exam (models.Model):
         return u"%s - %s" % (self.title, self.exam_group)
 
 
-class Rating (models.Model):
+class Rating(models.Model):
     """Rating examination Model"""
     class Meta(object):
         verbose_name = u"Оцінка"

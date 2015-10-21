@@ -1,0 +1,19 @@
+{% extends "students/base.html" %}
+
+{% load static from staticfiles %}
+
+{% load crispy_forms_tags %}
+
+{% block meta_title %}Форма Успішності {% endblock meta_title %}
+
+{% block title %}Форма Успішності {% endblock title %}
+
+{% block status_message %}
+    {% if form.errors %}
+        <div class="alert alert-warning" role="alert">Будь-ласка, виправте помилки</div>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% crispy form %}
+{% endblock content %}
