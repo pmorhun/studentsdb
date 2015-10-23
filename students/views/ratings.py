@@ -2,7 +2,7 @@ __author__ = 'travelist'
 # -*- coding: utf-8 -*-
 
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import CreateView, UpdateView, DeleteView
@@ -11,8 +11,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 from crispy_forms.bootstrap import FormActions
 
-from ..models import Rating, Student
-
+from ..models import Rating
 
 # Views for ratings
 def ratings_list(request):
@@ -46,6 +45,7 @@ def ratings_list(request):
     return render(request, 'students/ratings_list.html', {'ratings': ratings,
                                                          'reverse_begin': reverse_begin,
                                                          'number_on_page': number_on_page})
+
 
 class RatingForm(ModelForm):
     class Meta:

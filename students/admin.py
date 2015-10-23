@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import admin
-from .models import Student, Group, Exam, Rating
+from .models import Student, MonthJournal, Group, Exam, Rating
 from django.core.urlresolvers import reverse
 from django.forms import ModelForm, ValidationError
 
@@ -33,9 +33,24 @@ class StudentAdmin(admin.ModelAdmin):
     def view_on_site(self, obj):
         return reverse('students_edit', kwargs={'pk': obj.id})
 
+class GroupAdmin(admin.ModelAdmin):
+    list_display = ['title', 'leader']
+    list_display_links = ['title']
+    list_editable = ['leader']
+    ordering = ['title']
+    list_filter = ['leader']
+    list_per_page = 10
+    search_fields = ['title', 'leader', 'notes']
+
+    #form = GroupFormAdmin
+
+    def view_on_site(self, obj):
+        return reverse('groups_edit', kwargs={'pk': obj.id})
+
 
 # Register your models here.
 admin.site.register(Student, StudentAdmin)
-admin.site.register(Group)
+admin.site.register(Group, GroupAdmin)
 admin.site.register(Exam)
 admin.site.register(Rating)
+admin.site.register(MonthJournal)

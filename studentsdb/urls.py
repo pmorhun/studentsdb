@@ -18,9 +18,11 @@ from django.contrib import admin
 from .settings import MEDIA_ROOT, DEBUG
 
 from students.views.students import StudentUpdateView, StudentDeleteView
+from students.views.journal import JournalView
 from students.views.groups import GroupAddView, GroupUpdateView, GroupDeleteView
 from students.views.exams import ExamAddView, ExamUpdateView, ExamDeleteView
 from students.views.ratings import RatingAddView, RatingUpdateView, RatingDeleteView
+
 
 urlpatterns = [
     # Students urls
@@ -28,6 +30,8 @@ urlpatterns = [
     url(r'^students/add/$', 'students.views.students.students_add', name='students_add'),
     url(r'^students/(?P<pk>\d+)/edit/$', StudentUpdateView.as_view(), name='students_edit'),
     url(r'^students/(?P<pk>\d+)/delete/$', StudentDeleteView.as_view(), name='students_delete'),
+    # Journal urls
+    url(r'^journal/$', JournalView.as_view(), name='journal'),
     # Groups urls
     url(r'^groups/$', 'students.views.groups.groups_list', name='groups'),
     url(r'^groups/add/$', GroupAddView.as_view(), name='groups_add'),
