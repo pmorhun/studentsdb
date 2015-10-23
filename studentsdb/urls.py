@@ -21,7 +21,7 @@ from students.views.students import StudentUpdateView, StudentDeleteView
 from students.views.journal import JournalView
 from students.views.groups import GroupAddView, GroupUpdateView, GroupDeleteView
 from students.views.exams import ExamAddView, ExamUpdateView, ExamDeleteView
-from students.views.ratings import RatingAddView, RatingUpdateView, RatingDeleteView
+from students.views.ratings import RatingView, RatingAddView, RatingUpdateView, RatingDeleteView
 
 
 urlpatterns = [
@@ -43,7 +43,7 @@ urlpatterns = [
     url(r'^exams/(?P<pk>\d+)/edit/$', ExamUpdateView.as_view(), name='exams_edit'),
     url(r'^exams/(?P<pk>\d+)/delete/$', ExamDeleteView.as_view(), name='exams_delete'),
     # Rating urls
-    url(r'^ratings/$', 'students.views.ratings.ratings_list', name='ratings'),
+    url(r'^ratings/$', RatingView.as_view(), name='ratings'),
     url(r'^ratings/add/$', RatingAddView.as_view(), name='ratings_add'),
     url(r'^ratings/(?P<pk>\d+)/edit/$', RatingUpdateView.as_view(), name='ratings_edit'),
     url(r'^ratings/(?P<pk>\d+)/delete/$', RatingDeleteView.as_view(), name='ratings_delete'),

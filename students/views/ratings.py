@@ -5,46 +5,44 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.views.generic import CreateView, UpdateView, DeleteView
+from django.views.generic import CreateView, UpdateView, DeleteView, ListView
 from django.forms import ModelForm
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 from crispy_forms.bootstrap import FormActions
 
 from ..models import Rating
+from ..util import paginate
 
-# Views for ratings
-def ratings_list(request):
-    ratings = Rating.objects.all()
+class RatingView(ListView):
+    model = Rating
+    template_name = 'students/ratings_list.html'
+    context_object_name = 'ratings'
 
-    # try to order rating list
-    reverse_begin = False
-    order_by = request.GET.get('order_by', '')
-    if order_by in ('id', 'student_ball', 'exam_title', 'date_exam' 'ball'):
-        ratings = ratings.order_by(order_by)
-        if request.GET.get('reverse', '') == '1':
-            ratings = ratings.reverse()
-    else:
-        ratings = ratings.order_by('student_ball')
-        reverse_begin = True
+    def get_context_data(self, **kwargs):
 
-    # paginate ratings
-    paginator = Paginator(ratings, 4)
-    page = request.GET.get('page', '1')
-    number_on_page = (int(page) - 1) * 4
+        # get context data from TemplateView class
+        context = super(RatingView, self).get_context_data(**kwargs)
 
-    try:
-        ratings = paginator.page(page)
-    except PageNotAnInteger:
-        # If page is not an integer, deliver first page.
-        ratings = paginator.page(1)
-    except EmptyPage:
-        # If page is out of range (e.g. 9999), deliver last page of results.
-        ratings = paginator.page(paginator.num_pages)
+        # try to order rating list
+        reverse_begin = False
+        ratings = Rating.objects.all()
+        order_by = self.request.GET.get('order_by', '')
+        if order_by in ('student_ball', 'exam_title', 'date_exam', 'ball'):
+            ratings = ratings.order_by(order_by)
+            if self.request.GET.get('reverse', '') == '1':
+                ratings = ratings.reverse()
+        else:
+            ratings =ratings.order_by('student_ball')
+            reverse_begin = True
 
-    return render(request, 'students/ratings_list.html', {'ratings': ratings,
-                                                         'reverse_begin': reverse_begin,
-                                                         'number_on_page': number_on_page})
+        context['ratings'] = ratings
+        context['reverse_begin'] = reverse_begin
+        # apply pagination, 10 students per page
+        context = paginate(ratings, 4, self.request, context, var_name='ratings')
+        # finally return updated context
+        # with paginated students
+        return context
 
 
 class RatingForm(ModelForm):

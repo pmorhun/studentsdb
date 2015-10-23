@@ -155,7 +155,7 @@ class Exam(models.Model):
 
 
     def __unicode__(self):
-        return u"%s - %s" % (self.title, self.exam_group)
+        return u"%s" % (self.title)
 
 
 class Rating(models.Model):
@@ -187,4 +187,4 @@ class Rating(models.Model):
 
 
     def __unicode__(self):
-        return u"%s - %s - %s" % (self.student_ball, self.ball, self.exam_title )
+        return u"%s - %s" % (self.ball, self.exam_title )
