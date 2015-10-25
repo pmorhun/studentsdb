@@ -16,12 +16,7 @@
         <thead>
           <tr>
             <th>
-              <a href="{% url 'exams' %}?order_by=id{% if order_by == 'id' and reverse != '1' %}&amp;reverse=1{% endif %}">
                 No
-                {% if order_by == 'id' and reverse != '1' %}&uarr;
-                {% elif order_by == 'id' and reverse == '1' %}&darr;
-                {% endif %}
-              </a>
             </th>
             <th>
               <a href="{% url 'exams' %}?order_by=title{% if order_by == 'title' and reverse != '1' %}&amp;reverse=1{% endif %}">
@@ -54,7 +49,13 @@
 
       {% for exam in exams %}
         <tr>
-          <td>{{ forloop.counter|add:number_on_page }}</td>
+          <td>
+              {% if is_paginated %}
+                {{ page_obj.start_index|add:forloop.counter|add:"-1" }}
+              {% else %}
+                {{ forloop.counter }}
+              {% endif %}
+          </td>
           <td><a href="{% url 'exams_edit' exam.id %}">{{ exam.title }}</a></td>
           <td><a href="{% url 'exams_edit' exam.id %}">{{ exam.teacher }}</a></td>
           <td><a href="{% url 'exams_edit' exam.id %}">{{ exam.exam_group }}</a></td>
@@ -78,25 +79,9 @@
   <!-- End Students Listing -->
 <!-- Pages navigation block -->
 
-{% if exams.has_other_pages %}
-{% with order_by=request.GET.order_by reverse=request.GET.reverse %}
-<nav>
-  <ul class="pagination">
-    <li>
-      <a href="{% url 'exams' %}?page=1&amp;order_by={{ order_by }}&amp;reverse={{ reverse }}">&laquo;</a>
-    </li>
-    {% for p in exams.paginator.page_range %}
-    <li {% if exams.number == p %} class="active"{% endif %}>
-      <a href="{% url 'exams' %}?page={{ p }}&amp;order_by={{ order_by }}&amp;reverse={{ reverse }}">{{ p }}</a>
-    </li>
-    {% endfor %}
-    <li>
-      <a href="{% url 'exams' %}?page={{ exams.paginator.num_pages }}&amp;order_by={{ order_by }}&amp;reverse={{ reverse }}">&raquo;</a>
-    </li>
-  </ul>
-</nav>
+{% with object_list=exams %}
+  {% include "students/pagination.html" %}
 {% endwith %}
-{% endif %}
 
 
 {% endblock content %}

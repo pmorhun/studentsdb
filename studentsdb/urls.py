@@ -19,8 +19,8 @@ from .settings import MEDIA_ROOT, DEBUG
 
 from students.views.students import StudentUpdateView, StudentDeleteView
 from students.views.journal import JournalView
-from students.views.groups import GroupAddView, GroupUpdateView, GroupDeleteView
-from students.views.exams import ExamAddView, ExamUpdateView, ExamDeleteView
+from students.views.groups import GroupView, GroupAddView, GroupUpdateView, GroupDeleteView
+from students.views.exams import ExamView, ExamAddView, ExamUpdateView, ExamDeleteView
 from students.views.ratings import RatingView, RatingAddView, RatingUpdateView, RatingDeleteView
 
 
@@ -31,14 +31,14 @@ urlpatterns = [
     url(r'^students/(?P<pk>\d+)/edit/$', StudentUpdateView.as_view(), name='students_edit'),
     url(r'^students/(?P<pk>\d+)/delete/$', StudentDeleteView.as_view(), name='students_delete'),
     # Journal urls
-    url(r'^journal/$', JournalView.as_view(), name='journal'),
+    url(r'^journal/(?P<pk>\d+)?/?$', JournalView.as_view(), name='journal'),
     # Groups urls
-    url(r'^groups/$', 'students.views.groups.groups_list', name='groups'),
+    url(r'^groups/$', GroupView.as_view(), name='groups'),
     url(r'^groups/add/$', GroupAddView.as_view(), name='groups_add'),
     url(r'^groups/(?P<pk>\d+)/edit/$', GroupUpdateView.as_view(), name='groups_edit'),
     url(r'^groups/(?P<pk>\d+)/delete/$', GroupDeleteView.as_view(), name='groups_delete'),
     # Exams urls
-    url(r'^exams/$', 'students.views.exams.exams_list', name='exams'),
+    url(r'^exams/$', ExamView.as_view(), name='exams'),
     url(r'^exams/add/$', ExamAddView.as_view(), name='exams_add'),
     url(r'^exams/(?P<pk>\d+)/edit/$', ExamUpdateView.as_view(), name='exams_edit'),
     url(r'^exams/(?P<pk>\d+)/delete/$', ExamDeleteView.as_view(), name='exams_delete'),

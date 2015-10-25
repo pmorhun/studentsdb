@@ -2,10 +2,9 @@ __author__ = 'travelist'
 # -*- coding: utf-8 -*-
 
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.views.generic import CreateView, UpdateView, DeleteView
+from django.views.generic import CreateView, UpdateView, DeleteView, ListView
 from django.forms import ModelForm
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
@@ -13,40 +12,38 @@ from crispy_forms.bootstrap import FormActions
 
 
 from ..models import Exam
-
+from ..util import paginate
 
 # Views for Exams
-def exams_list(request):
-    exams = Exam.objects.all()
+class ExamView(ListView):
+    model = Exam
+    template_name = 'students/exams_list.html'
+    context_object_name = 'exams'
 
-    # try to order exam list
-    reverse_begin = False
-    order_by = request.GET.get('order_by', '')
-    if order_by in ('id', 'title', 'teacher', 'exam_group'):
-        exams = exams.order_by(order_by)
-        if request.GET.get('reverse', '') == '1':
-            exams = exams.reverse()
-    else:
-        exams = exams.order_by('title')
-        reverse_begin = True
+    def get_context_data(self, **kwargs):
 
-    # paginate students
-    paginator = Paginator(exams, 4)
-    page = request.GET.get('page', '1')
-    number_on_page = (int(page) - 1) * 4
+        # get context data from TemplateView class
+        context = super(ExamView, self).get_context_data(**kwargs)
 
-    try:
-        exams = paginator.page(page)
-    except PageNotAnInteger:
-        # If page is not an integer, deliver first page.
-        exams = paginator.page(1)
-    except EmptyPage:
-        # If page is out of range (e.g. 9999), deliver last page of results.
-        exams = paginator.page(paginator.num_pages)
+        # try to order rating list
+        reverse_begin = False
+        exams = Exam.objects.all()
+        order_by = self.request.GET.get('order_by', '')
+        if order_by in ('title', 'date_exam', 'teacher', 'exam_group'):
+            exams = exams.order_by(order_by)
+            if self.request.GET.get('reverse', '') == '1':
+                exams = exams.reverse()
+        else:
+            exams = exams.order_by('title')
+            reverse_begin = True
 
-    return render(request, 'students/exams_list.html', {'exams': exams,
-                                                         'reverse_begin': reverse_begin,
-                                                         'number_on_page': number_on_page})
+        context['exams'] = exams
+        context['reverse_begin'] = reverse_begin
+        # apply pagination, 10 students per page
+        context = paginate(exams, 4, self.request, context, var_name='exams')
+        # finally return updated context
+        # with paginated students
+        return context
 
 
 class ExamForm(ModelForm):
