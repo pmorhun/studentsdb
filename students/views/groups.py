@@ -11,7 +11,7 @@ from crispy_forms.bootstrap import FormActions
 
 
 from ..models import Group, Student
-from ..util import paginate
+from ..util import paginate, get_current_group
 
 # Views for Groups
 class GroupView(ListView):
@@ -19,27 +19,35 @@ class GroupView(ListView):
     template_name = 'students/groups_list.html'
     context_object_name = 'groups'
 
-    def get_context_data(self, **kwargs):
 
+    def get_queryset(self):
+        # check if we need to show only one group of students
+        current_group = get_current_group(self.request)
+        if current_group:
+            groups = [current_group]
+        else:
+            # otherwise show all students
+            groups = Group.objects.all()
+            # try to order rating list
+            #reverse_begin = False
+            order_by = self.request.GET.get('order_by', '')
+            if order_by in ('title', 'leader'):
+                groups = groups.order_by(order_by)
+                if self.request.GET.get('reverse', '') == '1':
+                    groups = groups.reverse()
+            else:
+                groups = groups.order_by('title')
+                #reverse_begin = True
+        return groups
+
+
+    def get_context_data(self, **kwargs):
         # get context data from TemplateView class
         context = super(GroupView, self).get_context_data(**kwargs)
-
-        # try to order rating list
-        reverse_begin = False
-        groups = Group.objects.all()
-        order_by = self.request.GET.get('order_by', '')
-        if order_by in ('title', 'leader'):
-            groups = groups.order_by(order_by)
-            if self.request.GET.get('reverse', '') == '1':
-                groups = groups.reverse()
-        else:
-            groups = groups.order_by('title')
-            reverse_begin = True
-
-        context['groups'] = groups
+        reverse_begin = True
         context['reverse_begin'] = reverse_begin
         # apply pagination, 10 students per page
-        context = paginate(groups, 4, self.request, context, var_name='groups')
+        context = paginate(context['groups'], 4, self.request, context, var_name='groups')
         # finally return updated context
         # with paginated students
         return context
