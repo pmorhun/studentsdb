@@ -7,7 +7,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import messages
-from django.views.generic import UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.forms import ModelForm
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
@@ -18,45 +18,38 @@ from ..util import paginate, get_current_group
 
 
 # Views for Students
+class StudentView(ListView):
+    model = Student
+    template_name = 'students/students_list.html'
+    context_object_name = 'students'
 
-def students_list(request):
-    # check if we need to show only one group of students
-    current_group = get_current_group(request)
-    if current_group:
-        students = Student.objects.filter(student_group=current_group)
-    else:
-        # otherwise show all students
-        students = Student.objects.all()
+    def get_queryset(self):
+        # check if we need to show only one group of students
+        current_group = get_current_group(self.request)
+        if current_group:
+            students = Student.objects.filter(student_group=current_group)
+        else:
+            # otherwise show all students
+            students = Student.objects.all()
 
-    # try to order students list
-    reverse_begin = False
-    order_by = request.GET.get('order_by', '')
-    if order_by in ('id', 'last_name', 'first_name', 'student_group', 'ticket'):
-        students = students.order_by(order_by)
-        if request.GET.get('reverse', '') == '1':
-            students = students.reverse()
-    else:
-        students = students.order_by('last_name')
-        reverse_begin = True
+        # try to order students list
+        order_by = self.request.GET.get('order_by', '')
+        if order_by in ('last_name', 'first_name', 'student_group', 'ticket'):
+            students = students.order_by(order_by)
+            if self.request.GET.get('reverse', '') == '1':
+                students = students.reverse()
+        else:
+            students = students.order_by('last_name')
 
-    # paginate students
+        return students
 
-    paginator = Paginator(students, 7)
-    page = request.GET.get('page', '1')
-    number_on_page = (int(page) - 1) * 7
 
-    try:
-        students = paginator.page(page)
-    except PageNotAnInteger:
-        # If page is not an integer, deliver first page.
-        students = paginator.page(1)
-    except EmptyPage:
-        # If page is out of range (e.g. 9999), deliver last page of results.
-        students = paginator.page(paginator.num_pages)
-
-    return render(request, 'students/students_list.html', {'students': students,
-                                                           'reverse_begin': reverse_begin,
-                                                           'number_on_page': number_on_page})
+    def get_context_data(self, **kwargs):
+        # context with paginated students
+        context = super(StudentView, self).get_context_data(**kwargs)
+        context = paginate(context['students'], 7, self.request,
+                           context, var_name='students')
+        return context
 
 
 
@@ -145,13 +138,15 @@ def students_add(request):
 class StudentUpdateForm(ModelForm):
     class Meta:
         model = Student
-        fields = {'first_name', 'last_name', 'middle_name', 'student_group', 'birthday', 'photo', 'ticket', 'notes'}
+        fields = {'first_name', 'last_name', 'middle_name', 'student_group',
+                  'birthday', 'photo', 'ticket', 'notes'}
 
     def __init__(self, *args, **kwargs):
         super(StudentUpdateForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper(self)
         # set form tag attributes
-        self.helper.form_action = reverse('students_edit', kwargs={'pk': kwargs['instance'].id})
+        self.helper.form_action = reverse('students_edit',
+                                          kwargs={'pk': kwargs['instance'].id})
         self.helper.form_method = 'POST'
         self.helper.form_class = 'form-horizontal'
         # set form field properties
@@ -162,7 +157,8 @@ class StudentUpdateForm(ModelForm):
         # add buttons
         self.helper.layout[-1] = FormActions(
             Submit('add_button', u'Зберегти', css_class="btn btn-primary"),
-            Submit('cancel_button', u'Скасувати', css_class="btn btn-link"),      )
+            Submit('cancel_button', u'Скасувати', css_class="btn btn-link"),)
+
 
 class StudentUpdateView(UpdateView):
     model = Student

@@ -71,7 +71,8 @@ class GroupForm(ModelForm):
         if add_form:
             self.helper.form_action = reverse('groups_add')
         else:
-            self.helper.form_action = reverse('groups_edit', kwargs={'pk': kwargs['instance'].id})
+            self.helper.form_action = reverse('groups_edit',
+               kwargs={'pk': kwargs['instance'].id})
 
         self.helper.form_method = 'POST'
         self.helper.form_class = 'form-horizontal'
@@ -87,18 +88,20 @@ class GroupForm(ModelForm):
             submit = Submit('save_button', u'Зберегти', css_class="btn btn-primary")
         self.helper.layout[-1] = FormActions(
             submit,
-            Submit('cancel_button', u'Скасувати', css_class="btn btn-link"),
-        )
+            Submit('cancel_button', u'Скасувати', css_class="btn btn-link"))
+
+
 
 class BaseGroupFormView(object):
     def get_success_url(self):
         return u'%s?status_message=Зміни успішно збережено!' % reverse('groups')
+
     def post(self, request, *args, **kwargs):
         # handle cancel button
-        if request.POST.get('cancel_button'):
-            return HttpResponseRedirect(reverse('groups') + u'?status_message=Зміни скасовано.')
-        else:
-            return super(BaseGroupFormView, self).post(request, *args, **kwargs)
+       if request.POST.get('cancel_button'):
+           return HttpResponseRedirect(reverse('groups') + u'?status_message=Зміни скасовано.')
+       else:
+           return super(BaseGroupFormView, self).post(request, *args, **kwargs)
 
 
 class GroupAddView(BaseGroupFormView, CreateView):

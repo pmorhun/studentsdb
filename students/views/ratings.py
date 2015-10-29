@@ -62,7 +62,8 @@ class RatingForm(ModelForm):
         if add_form:
             self.helper.form_action = reverse('ratings_add')
         else:
-            self.helper.form_action = reverse('ratings_edit', kwargs={'pk': kwargs['instance'].id})
+            self.helper.form_action = reverse('ratings_edit',
+                kwargs={'pk': kwargs['instance'].id})
 
         self.helper.form_method = 'POST'
         self.helper.form_class = 'form-horizontal'

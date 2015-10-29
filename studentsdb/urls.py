@@ -17,7 +17,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from .settings import MEDIA_ROOT, DEBUG
 
-from students.views.students import StudentUpdateView, StudentDeleteView
+from students.views.students import StudentView, StudentUpdateView, StudentDeleteView
 from students.views.journal import JournalView
 from students.views.groups import GroupView, GroupAddView, GroupUpdateView, GroupDeleteView
 from students.views.exams import ExamView, ExamAddView, ExamUpdateView, ExamDeleteView
@@ -26,7 +26,7 @@ from students.views.ratings import RatingView, RatingAddView, RatingUpdateView, 
 
 urlpatterns = [
     # Students urls
-    url(r'^$', 'students.views.students.students_list', name='home'),
+    url(r'^$', StudentView.as_view(), name='home'),
     url(r'^students/add/$', 'students.views.students.students_add', name='students_add'),
     url(r'^students/(?P<pk>\d+)/edit/$', StudentUpdateView.as_view(), name='students_edit'),
     url(r'^students/(?P<pk>\d+)/delete/$', StudentDeleteView.as_view(), name='students_delete'),
