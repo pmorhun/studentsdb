@@ -83,8 +83,11 @@ class ExamForm(ModelForm):
         )
 
 class BaseExamFormView(object):
+
     def get_success_url(self):
         return u'%s?status_message=Зміни успішно збережено!' % reverse('exams')
+
+
     def post(self, request, *args, **kwargs):
         # handle cancel button
         if request.POST.get('cancel_button'):
@@ -98,10 +101,12 @@ class ExamAddView(BaseExamFormView, CreateView):
     form_class = ExamForm
     template_name = 'students/exams_form.html'
 
+
 class ExamUpdateView(BaseExamFormView, UpdateView):
     model = Exam
     form_class = ExamForm
     template_name = 'students/exams_form.html'
+
 
 class ExamDeleteView(BaseExamFormView, DeleteView):
     model = Exam

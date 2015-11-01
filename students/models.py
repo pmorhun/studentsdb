@@ -148,7 +148,7 @@ class Exam(models.Model):
         verbose_name=u"Група",
         blank=False,
         null=True,
-        on_delete=models.PROTECT)
+        on_delete=models.SET_NULL)
     notes = models.TextField(
         blank=True,
         verbose_name=u"Додаткові нотатки")
@@ -175,12 +175,12 @@ class Rating(models.Model):
         verbose_name=u"Студент",
         blank=False,
         null=True,
-        on_delete=models.PROTECT)
+        on_delete=models.SET_NULL)
     exam_title = models.ForeignKey('Exam',
         verbose_name=u"Предмет",
         blank=False,
         null=True,
-        on_delete=models.PROTECT)
+        on_delete=models.SET_NULL)
     notes = models.TextField(
         blank=True,
         verbose_name=u"Додаткові нотатки")

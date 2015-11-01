@@ -4,11 +4,11 @@ __author__ = 'travelist'
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView
 from django.forms import ModelForm
+
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit
+from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit
 from crispy_forms.bootstrap import FormActions
 
 from ..models import Rating
@@ -72,19 +72,43 @@ class RatingForm(ModelForm):
         self.helper.html5_required = True
         self.helper.label_class = 'col-sm-2 control-label'
         self.helper.field_class = 'col-sm-10'
+
         # add buttons
+
         if add_form:
-            submit = Submit('add_button', u'Додати', css_class="btn btn-primary")
+            submit = Submit('add_button', u'Додати',
+                            css_class="btn btn-primary")
         else:
-            submit = Submit('save_button', u'Зберегти', css_class="btn btn-primary")
-        self.helper.layout[-1] = FormActions(
+            submit = Submit('save_button', u'Зберегти',
+                            css_class="btn btn-primary")
+
+        self.helper.layout = Layout(
+            Fieldset(
+                'Rating students',
+                'ball',
+                'date_exam',
+                'student_ball',
+                'exam_title',
+                'notes'
+            ),
+            ButtonHolder(
+                submit
+            )
+        )
+
+
+
+        self.helper.layout[-1] = ButtonHolder(
             submit,
             Submit('cancel_button', u'Скасувати', css_class="btn btn-link"),
         )
 
 class BaseRatingFormView(object):
+
     def get_success_url(self):
-        return u'%s?status_message=Зміни успішно збережено!' % reverse('ratings')
+        return u'%s?status_message=Зміни збережено!' % reverse('ratings')
+
+
     def post(self, request, *args, **kwargs):
         # handle cancel button
         if request.POST.get('cancel_button'):
@@ -103,7 +127,9 @@ class RatingUpdateView(BaseRatingFormView, UpdateView):
     form_class = RatingForm
     template_name = 'students/ratings_form.html'
 
-class RatingDeleteView(BaseRatingFormView, DeleteView):
+class RatingDeleteView(DeleteView):
     model = Rating
     template_name = 'students/ratings_confirm_delete.html'
 
+    def get_success_url(self):
+        return u'%s?status_message=Оцінку видалено!' % reverse('ratings')

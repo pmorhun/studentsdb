@@ -12,6 +12,8 @@ from django.contrib import messages
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 
+import logging
+
 class ContactForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
@@ -56,6 +58,8 @@ def contact_admin(request):
                 send_mail(subject, message, from_email, [ADMIN_EMAIL], fail_silently=False)
             except Exception:
                 messages.info(request, u'Під час відправки листа виникла помилка.')
+                logger = logging.getLogger(__name__)
+                logger.exception(message)
             else:
                 messages.info(request, u'Повідомлення успішно надіслане!')
                 # redirect to same contact page with success message
