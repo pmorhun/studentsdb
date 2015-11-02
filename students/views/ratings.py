@@ -84,7 +84,7 @@ class RatingForm(ModelForm):
 
         self.helper.layout = Layout(
             Fieldset(
-                'Rating students',
+                '',
                 'ball',
                 'date_exam',
                 'student_ball',
