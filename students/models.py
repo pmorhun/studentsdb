@@ -1,5 +1,6 @@
-# -*- coding: utf-8 -*-
+
 from django.db import models
+from django.utils.translation import ugettext_lazy as _
 
 
 class Student(models.Model):
@@ -7,39 +8,39 @@ class Student(models.Model):
 
     class Meta(object):
         """ For translate model Student in admin interface"""
-        verbose_name = u"Студент"
-        verbose_name_plural = u"Студенти"
+        verbose_name = _(u"Student")
+        verbose_name_plural = _(u"Students")
 
     first_name = models.CharField(
         max_length=256,
         blank=False,
-        verbose_name=u"Ім'я")
+        verbose_name=_(u"First Name"))
     last_name = models.CharField(
         max_length=256,
         blank=False,
-        verbose_name=u"Прізвище")
+        verbose_name=_(u"Last Name"))
     middle_name = models.CharField(
         max_length=256,
         blank=True,
-        verbose_name=u"По-батькові",
+        verbose_name=_(u"Middle Name"),
         default='')
     birthday = models.DateField(
         blank=True,
-        verbose_name=u"Дата народження",
+        verbose_name=_(u"Birthday"),
         null=True)
     photo = models.ImageField(
         blank=True,
-        verbose_name=u"Фото",
+        verbose_name=_(u"Photo"),
         null=True)
     ticket = models.CharField(
         max_length=256,
         blank=False,
-        verbose_name=u"Білет")
+        verbose_name=_(u"Ticket"))
     notes = models.TextField(
         blank=True,
-        verbose_name=u"Додаткові нотатки")
+        verbose_name=_(u"Note"))
     student_group = models.ForeignKey('Group',
-        verbose_name=u"Група",
+        verbose_name=_(u"Group"),
         blank=False,
         null=True,
         on_delete=models.PROTECT)
@@ -55,13 +56,13 @@ class Student(models.Model):
 class MonthJournal(models.Model):
     """Student Monthly Journal"""
     class Meta:
-        verbose_name = u'Місячний Журнал'
-        verbose_name_plural = u'Місячні Журнали'
+        verbose_name = _(u'Journal')
+        verbose_name_plural = _(u'Journals')
 
-    student = models.ForeignKey('Student', verbose_name=u'Студент', blank=False, unique_for_month='date')
+    student = models.ForeignKey('Student', verbose_name=_(u'Student'), blank=False, unique_for_month='date')
     # we only need year and month, so always set day to first day of the month
-    date = models.DateField(verbose_name=u'Дата', blank=False)
-    # list of days, each says whether student was presenе or not
+    date = models.DateField(verbose_name=_(u'Date'), blank=False)
+    #list of days, each says whether student was present or not
     present_day1 = models.BooleanField(default=False)
     present_day2 = models.BooleanField(default=False)
     present_day3 = models.BooleanField(default=False)
@@ -103,21 +104,21 @@ class MonthJournal(models.Model):
 class Group(models.Model):
     """Group Model"""
     class Meta(object):
-        verbose_name = u"Група"
-        verbose_name_plural = u"Групи"
+        verbose_name = _(u"Group")
+        verbose_name_plural = _(u"Groups")
 
     title = models.CharField(
         max_length=256,
         blank=False,
-        verbose_name=u"Назва")
+        verbose_name=_(u"Title"))
     leader = models.OneToOneField('Student',
-        verbose_name=u"Староста",
+        verbose_name=_(u"Leader"),
         blank=True,
         null=True,
         on_delete=models.SET_NULL)
     notes = models.TextField(
         blank=True,
-        verbose_name=u"Додаткові нотатки")
+        verbose_name=_(u"Note"))
 
     def __unicode__(self):
         if self.leader:
@@ -128,30 +129,30 @@ class Group(models.Model):
 class Exam(models.Model):
     """examination Model"""
     class Meta(object):
-        verbose_name = u"Іспит"
-        verbose_name_plural = u"Іспити"
+        verbose_name = _(u"Exam")
+        verbose_name_plural = _(u"Exams")
 
     title = models.CharField(
         max_length=256,
-        verbose_name=u"Назва предмету",
+        verbose_name=_(u"Discipline"),
         blank=False)
     date_exam = models.DateField(
-        verbose_name=u"Дата іспиту",
+        verbose_name=_(u"Date"),
         blank=True,
         null=True)
     teacher = models.CharField(
         max_length=256,
-        verbose_name=u"Викладач",
+        verbose_name=_(u"Teacher"),
         blank=True,
         null=True)
     exam_group = models.ForeignKey('Group',
-        verbose_name=u"Група",
+        verbose_name=_(u"Group"),
         blank=False,
         null=True,
         on_delete=models.SET_NULL)
     notes = models.TextField(
         blank=True,
-        verbose_name=u"Додаткові нотатки")
+        verbose_name=_(u"Note"))
 
 
     def __unicode__(self):
@@ -161,29 +162,29 @@ class Exam(models.Model):
 class Rating(models.Model):
     """Rating examination Model"""
     class Meta(object):
-        verbose_name = u"Оцінка"
-        verbose_name_plural = u"Оцінки"
+        verbose_name = _(u"Rating")
+        verbose_name_plural = _(u"Ratings")
 
     ball = models.IntegerField(
-        verbose_name=u"Бал",
+        verbose_name=_(u"Rating"),
         blank=False)
     date_exam = models.DateField(
-        verbose_name=u"Дата іспиту",
+        verbose_name=_(u"Date"),
         blank=True,
         null=True)
     student_ball = models.ForeignKey('Student',
-        verbose_name=u"Студент",
+        verbose_name=_(u"Student"),
         blank=False,
         null=True,
         on_delete=models.SET_NULL)
     exam_title = models.ForeignKey('Exam',
-        verbose_name=u"Предмет",
+        verbose_name=_(u"Discipline"),
         blank=False,
         null=True,
         on_delete=models.SET_NULL)
     notes = models.TextField(
         blank=True,
-        verbose_name=u"Додаткові нотатки")
+        verbose_name=_(u"Note"))
 
 
     def __unicode__(self):

@@ -24,6 +24,8 @@ from students.views.exams import ExamView, ExamAddView, ExamUpdateView, ExamDele
 from students.views.ratings import RatingView, RatingAddView, RatingUpdateView, RatingDeleteView
 
 
+js_info_dict = {'packages': ('students',),}
+
 urlpatterns = [
     # Students urls
     url(r'^$', StudentView.as_view(), name='home'),
@@ -53,6 +55,9 @@ urlpatterns = [
 
     # Admin urls
     url(r'^admin/', include(admin.site.urls)),
+
+    # Js internationalization urls
+    url(r'^jsi18n\.js$', 'django.views.i18n.javascript_catalog', js_info_dict),
 
 
 ]

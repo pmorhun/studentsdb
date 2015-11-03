@@ -1,12 +1,17 @@
 {% extends "students/base.html" %}
+
+{% load i18n %}
 {% load static from staticfiles %}
-{% block meta_title %}Видалити Оцінку{% endblock meta_title %}
-{% block title %}Видалити Оцінку{% endblock title %}
+
+{% block meta_title %}{% trans "Delete Rating" %}{% endblock meta_title %}
+{% block title %}{% trans "Delete Rating" %}{% endblock title %}
 
 {% block content %}
 <form action="{% url 'ratings_delete' object.id %}" method="post">
     {% csrf_token %}
-    <p>Ви дійсно хочете видалити Оцінку {{ object }} ({{ object.student_ball }})?</p>
+    <p>
+        {% blocktrans %}Do you really want to delete rating: "{{ object }} ({{ object.student_ball }})"?{% endblocktrans %}
+    </p>
     <input type="submit" value="Так" name="delete_button" class="btn btn-danger" /><br /><br />
 </form>
 {% endblock content %}

@@ -1,16 +1,17 @@
 {% extends "students/base.html" %}
 
+{% load i18n %}
 {% load static from staticfiles %}
 
 {% load crispy_forms_tags %}
 
-{% block meta_title %}Форма Успішності {% endblock meta_title %}
+{% block meta_title %}{% trans "Form of rating" %}{% endblock meta_title %}
 
-{% block title %}Форма Успішності {% endblock title %}
+{% block title %}{% trans "Form of rating" %}{% endblock title %}
 
 {% block status_message %}
     {% if form.errors %}
-        <div class="alert alert-warning" role="alert">Будь-ласка, виправте помилки</div>
+        <div class="alert alert-warning" role="alert">{% trans "Please, correct the following errors" %}</div>
     {% endif %}
 {% endblock %}
 
