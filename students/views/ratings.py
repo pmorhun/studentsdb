@@ -11,7 +11,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit
 from crispy_forms.bootstrap import FormActions
 
-from ..models import Rating
+from ..models import Rating, Student
 from ..util import paginate
 
 class RatingView(ListView):
@@ -26,7 +26,14 @@ class RatingView(ListView):
 
         # try to order rating list
         reverse_begin = False
-        ratings = Rating.objects.all()
+
+        search = self.request.GET.get('search_quwery', '').strip()
+        if search:
+            search_id = Student.objects.filter(last_name__icontains=search)
+            ratings = Rating.objects.filter(student_ball_id=search_id)
+        else:
+            ratings = Rating.objects.all()
+
         order_by = self.request.GET.get('order_by', '')
         if order_by in ('student_ball', 'exam_title', 'date_exam', 'ball'):
             ratings = ratings.order_by(order_by)
@@ -39,13 +46,18 @@ class RatingView(ListView):
         context['ratings'] = ratings
         context['reverse_begin'] = reverse_begin
         # apply pagination, 10 students per page
-        context = paginate(ratings, 4, self.request, context, var_name='ratings')
+        context = paginate(ratings,
+                           4,
+                           self.request,
+                           context,
+                           var_name='ratings')
         # finally return updated context
         # with paginated students
         return context
 
 
 class RatingForm(ModelForm):
+
     class Meta:
         model = Rating
         fields = {'ball', 'date_exam', 'student_ball', 'exam_title', 'notes'}

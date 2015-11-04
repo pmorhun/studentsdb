@@ -58,7 +58,7 @@
           </td>
           <td><a href="{% url 'exams_edit' exam.id %}">{{ exam.title }}</a></td>
           <td><a href="{% url 'exams_edit' exam.id %}">{{ exam.teacher }}</a></td>
-          <td><a href="{% url 'exams_edit' exam.id %}">{{ exam.exam_group }}</a></td>
+          <td><a href="{% url 'groups_edit' exam.exam_group.id %}">{{ exam.exam_group }}</a></td>
           <td>
             <div class="btn-group">
               <button type="button" class="btn btn-default dropdown-toggle"

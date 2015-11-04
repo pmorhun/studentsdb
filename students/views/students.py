@@ -1,9 +1,11 @@
 
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.forms import ModelForm
 from django.utils.translation import ugettext as _
+
+from django import forms
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
@@ -25,8 +27,12 @@ class StudentView(ListView):
         if current_group:
             students = Student.objects.filter(student_group=current_group)
         else:
-            # otherwise show all students
             students = Student.objects.all()
+
+        search = self.request.GET.get('search_quwery', '').strip()
+        if search:
+            students = Student.objects.filter(last_name__icontains=search)
+
 
         # try to order students list
         order_by = self.request.GET.get('order_by', '')
@@ -46,7 +52,6 @@ class StudentView(ListView):
         context = paginate(context['students'], 7, self.request,
                            context, var_name='students')
         return context
-
 
 
 class StudentForm(ModelForm):
@@ -118,3 +123,4 @@ class StudentDeleteView(DeleteView):
     template_name = 'students/students_confirm_delete.html'
     def get_success_url(self):
         return _(u'%s?status_message=Delete successfully!' % reverse('home'))
+
