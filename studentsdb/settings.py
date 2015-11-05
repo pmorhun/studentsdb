@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'crispy_forms',
+    'registration',
     'students',
 )
 
@@ -61,7 +62,7 @@ ROOT_URLCONF = 'studentsdb.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['studentsdb', 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -77,6 +78,9 @@ TEMPLATES = [
         },
     },
 ]
+
+
+
 
 WSGI_APPLICATION = 'studentsdb.wsgi.application'
 
@@ -126,6 +130,10 @@ EMAIL_USE_TLS = True
 
 #styls for form
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
+# django-registration-redux
+REGISTRATION_OPEN = True
+
 
 # Logging
 LOG_FILE = os.path.join(BASE_DIR, 'studentsdb.log')
