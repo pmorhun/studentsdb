@@ -4,8 +4,9 @@ from django.core.urlresolvers import reverse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.forms import ModelForm
 from django.utils.translation import ugettext as _
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 
-from django import forms
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
@@ -121,6 +122,7 @@ class StudentUpdateView(BaseStudentFormView, UpdateView):
 class StudentDeleteView(DeleteView):
     model = Student
     template_name = 'students/students_confirm_delete.html'
+
     def get_success_url(self):
         return _(u'%s?status_message=Delete successfully!' % reverse('home'))
 

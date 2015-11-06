@@ -134,6 +134,9 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 # django-registration-redux
 REGISTRATION_OPEN = True
 
+LOGIN_URL = 'users:auth_login'
+LOGOUT_URL = 'users:auth_logout'
+
 
 # Logging
 LOG_FILE = os.path.join(BASE_DIR, 'studentsdb.log')
