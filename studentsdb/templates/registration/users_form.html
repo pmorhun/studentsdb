@@ -1,0 +1,34 @@
+{% extends "students/base.html" %}
+
+{% load i18n %}
+{% load static from staticfiles %}
+
+{% load crispy_forms_tags %}
+
+{% block meta_title %}{% trans "Form of user" %}{% endblock meta_title %}
+
+{% block title %}{% trans "Form of user" %}{% endblock title %}
+
+{% block status_message %}
+    {% if form.errors %}
+        <div class="alert alert-warning" role="alert">{% trans "Please, correct the following errors" %}</div>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<!-- Start subheader -->
+<div class="row" id="sub-header">
+  <div class="col-xs-12">
+    <ul class="nav nav-tabs" role="tablist">
+      {% if user.is_authenticated %}
+        <li role="presentation" {% if '/profile' in request.path %}class="active"{% endif %}><a href="{% url 'profile' %}">{% trans "Profile" %}</a></li>
+        <li role="presentation" {% if '/edit' in request.path %}class="active"{% endif %}><a href="{% url 'users_edit' user.id %}">{% trans "Edit profile" %}</a></li>
+      {% endif %}
+    </ul>
+  </div>
+</div>
+<!-- End subheader -->
+<p>
+  {% crispy form %}
+</p>
+{% endblock content %}

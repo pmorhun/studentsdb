@@ -26,7 +26,7 @@ from students.views.journal import JournalView
 from students.views.groups import GroupView, GroupAddView, GroupUpdateView, GroupDeleteView
 from students.views.exams import ExamView, ExamAddView, ExamUpdateView, ExamDeleteView
 from students.views.ratings import RatingView, RatingAddView, RatingUpdateView, RatingDeleteView
-
+from studentsdb.views import UserView, UserUpdateView
 
 js_info_dict = {'packages': ('students',),}
 
@@ -56,6 +56,10 @@ urlpatterns = [
     # Contact Admin Form
     url(r'^contact_admin/$', 'students.views.contact_admin.contact_admin', name='contact_admin'),
     # User Related urls
+    url(r'^users/$', login_required(UserView.as_view()), name='users_list'),
+    url(r'^users/(?P<pk>\d+)/edit/$', login_required(UserUpdateView.as_view()), name='users_edit'),
+
+    url(r'^users/profile/$', login_required(TemplateView.as_view(template_name='registration/profile.html')), name='profile'),
     url(r'^users/logout/$', auth_views.logout, kwargs={'next_page': 'home'}, name='auth_logout'),
     url(r'^register/complete/$', RedirectView.as_view(pattern_name='home'), name='registration_complete'),
     url(r'^users/', include('registration.backends.simple.urls', namespace='users')),

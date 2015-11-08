@@ -1,0 +1,79 @@
+{% extends "students/base.html" %}
+{% load i18n %}
+{% block meta_title %}{{ user.get_full_name|default:user.username }}{% endblock meta_title %}
+{% block title %}{{ user.get_full_name|default:user.username }}{% endblock title %}
+
+{% block content %}
+
+<!-- Start subheader -->
+<div class="row" id="sub-header">
+  <div class="col-xs-12">
+    <ul class="nav nav-tabs" role="tablist">
+      {% if user.is_authenticated %}
+        <li role="presentation" {% if '/profile' in request.path %}class="active"{% endif %}><a href="{% url 'profile' %}">{% trans "Profile" %}</a></li>
+        <li role="presentation" {% if '/users_edit' in request.path %}class="active"{% endif %}><a href="{% url 'users_edit' user.id %}">{% trans "Edit profile" %}</a></li>
+      {% endif %}
+    </ul>
+  </div>
+</div>
+<!-- End subheader -->
+
+
+<p class="row">
+
+  <div class="col-xs-2">
+    {% if user.stprofile.photo %}
+        <img class="img-circle" src="{{ user.stprofile.photo.url }}" height="120" width="120" />
+    {% endif %}
+  </div>
+  <div class="col-xs-10">
+    <table class="table table-striped">
+
+      {% if user.email %}
+      <tr>
+        <td>{% trans "Email" %}:</td>
+        <td>{{ user.email }}</td>
+      </tr>
+      {% endif %}
+
+      {% if user.username %}
+      <tr>
+        <td>{% trans "Username" %}:</td>
+        <td>{{ user.username }}</td>
+      </tr>
+      {% endif %}
+
+      {% if user.date_joined %}
+      <tr>
+        <td>{% trans "Joined" %}:</td>
+        <td>{{ user.date_joined }}</td>
+      </tr>
+      {% endif %}
+
+      {% if user.stprofile.mobile_phone %}
+      <tr>
+        <td>{% trans "Mobile Phone" %}:</td>
+        <td>{{ user.stprofile.mobile_phone }}</td>
+      </tr>
+      {% endif %}
+
+      {% if user.stprofile.adress %}
+      <tr>
+        <td>{% trans "Adress" %}:</td>
+        <td>{{ user.stprofile.adress }}</td>
+      </tr>
+      {% endif %}
+
+      {% if user.stprofile.passport %}
+      <tr>
+        <td>{% trans "Passport" %}:</td>
+        <td>{{ user.stprofile.passport }}</td>
+      </tr>
+      {% endif %}
+
+    </table>
+  </div>
+</p>
+
+{% endblock content %}
+

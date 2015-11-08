@@ -41,6 +41,8 @@ INSTALLED_APPS = (
     'crispy_forms',
     'registration',
     'students',
+    'studentsdb',
+
 )
 
 MIDDLEWARE_CLASSES = (
@@ -53,8 +55,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-
-
 )
 
 ROOT_URLCONF = 'studentsdb.urls'
@@ -62,7 +62,7 @@ ROOT_URLCONF = 'studentsdb.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['studentsdb', 'templates'],
+        'DIRS': [os.path.join(BASE_DIR, 'studentsdb', 'templates'),],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -78,8 +78,6 @@ TEMPLATES = [
         },
     },
 ]
-
-
 
 
 WSGI_APPLICATION = 'studentsdb.wsgi.application'
