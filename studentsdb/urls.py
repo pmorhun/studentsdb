@@ -58,11 +58,12 @@ urlpatterns = [
     # User Related urls
     url(r'^users/$', login_required(UserView.as_view()), name='users_list'),
     url(r'^users/(?P<pk>\d+)/edit/$', login_required(UserUpdateView.as_view()), name='users_edit'),
-
     url(r'^users/profile/$', login_required(TemplateView.as_view(template_name='registration/profile.html')), name='profile'),
     url(r'^users/logout/$', auth_views.logout, kwargs={'next_page': 'home'}, name='auth_logout'),
     url(r'^register/complete/$', RedirectView.as_view(pattern_name='home'), name='registration_complete'),
     url(r'^users/', include('registration.backends.simple.urls', namespace='users')),
+    # Social Auth Related urls
+    url('^social/', include('social.apps.django_app.urls', namespace='social')),
     # Admin urls
     url(r'^admin/', include(admin.site.urls)),
     # Js internationalization urls

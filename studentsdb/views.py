@@ -50,7 +50,8 @@ class UserForm(ModelForm):
                 'first_name',
                 'email',
                 'date_joined',
-                'user.stprofile.mobile_phone',
+                #'user.stprofile.mobile_phone',
+
             ),
             ButtonHolder(
                 submit
