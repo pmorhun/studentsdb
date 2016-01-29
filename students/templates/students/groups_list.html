@@ -8,7 +8,8 @@
 {% block title %}{% trans "Groups" %}{% endblock title %}
 
 {% block content %}
-  <a href="{% url 'groups_add' %}" class="btn btn-primary">{% trans "Add Group" %}</a>
+
+  <a href="{% url 'groups_add' %}" class="btn btn-primary" id="group-add-form-link">{% trans "Add Group" %}</a>
 
   <!-- Start Students Listing -->
   <table class="table">
@@ -48,8 +49,8 @@
                 {{ forloop.counter }}
               {% endif %}
           </td>
-          <td><a href="{% url 'groups_edit' group.id %}">{{ group.title }}</a></td>
-          <td>{% if group.leader %}<a href="{% url 'students_edit' group.leader.id %}">{{ group.leader.first_name }} {{ group.leader.last_name }}</a>{% else %}None{% endif %}</td>
+          <td><a href="{% url 'groups_edit' group.id %}" class="group-edit-form-link">{{ group.title }}</a></td>
+          <td>{% if group.leader %}<a href="{% url 'students_edit' group.leader.id %}" class="student-edit-form-link">{{ group.leader.first_name }} {{ group.leader.last_name }}</a>{% else %}None{% endif %}</td>
           <td>
             <div class="btn-group">
               <button type="button" class="btn btn-default dropdown-toggle"
@@ -57,7 +58,7 @@
                 <span class="caret"></span>
               </button>
               <ul class="dropdown-menu" role="menu">
-                <li><a href="{% url 'groups_edit' group.id %}">{% trans "Edit" %}</a></li>
+                <li><a href="{% url 'groups_edit' group.id %}" class="group-edit-form-link">{% trans "Edit" %}</a></li>
                 <li><a href="/journal/{{ student.id }}">{% trans "Journal" %}</a></li>
                 <li><a href="{% url 'groups_delete' group.id %}">{% trans "Delete" %}</a></li>
               </ul>

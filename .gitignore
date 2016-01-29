@@ -1,0 +1,14 @@
+*.py[co]
+*.pid
+*.swp
+*.sqlite
+*.mo
+
+.DS_Store
+.sass-cache
+.svn
+.git
+.idea
+
+/htdocs/media
+/htdocs/static

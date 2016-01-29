@@ -34,7 +34,6 @@ class StudentView(ListView):
         if search:
             students = Student.objects.filter(last_name__icontains=search)
 
-
         # try to order students list
         order_by = self.request.GET.get('order_by', '')
         if order_by in ('last_name', 'first_name', 'student_group', 'ticket'):
@@ -45,7 +44,6 @@ class StudentView(ListView):
             students = students.order_by('last_name')
 
         return students
-
 
     def get_context_data(self, **kwargs):
         # context with paginated students
@@ -58,8 +56,8 @@ class StudentView(ListView):
 class StudentForm(ModelForm):
     class Meta:
         model = Student
-        fields = {'first_name', 'last_name', 'middle_name', 'student_group',
-                  'birthday', 'photo', 'ticket', 'notes'}
+        fields = ['last_name', 'first_name', 'middle_name', 'student_group',
+                  'ticket', 'birthday', 'photo', 'notes', ]
 
     def __init__(self, *args, **kwargs):
         super(StudentForm, self).__init__(*args, **kwargs)
@@ -73,14 +71,13 @@ class StudentForm(ModelForm):
             self.helper.form_action = reverse('students_edit',
                 kwargs={'pk': kwargs['instance'].id})
 
-
         self.helper.form_method = 'POST'
         self.helper.form_class = 'form-horizontal'
         # set form field properties
         self.helper.help_text_inline = True
         self.helper.html5_required = True
-        self.helper.label_class = 'col-sm-2 control-label'
-        self.helper.field_class = 'col-sm-10'
+        self.helper.label_class = 'col-sm-4 control-label'
+        self.helper.field_class = 'col-sm-8'
         # add buttons
         if add_form:
             submit = Submit('add_button', _(u'Add'),
@@ -88,9 +85,8 @@ class StudentForm(ModelForm):
         else:
             submit = Submit('add_button', _(u'Save'),
                             css_class="btn btn-primary")
-
-        self.helper.layout[-1] = FormActions(submit, Submit('cancel_button',
-                                 _(u'Cancel'), css_class="btn btn-link"),)
+        self.helper.add_input(submit)
+        self.helper.add_input(Submit('cancel_button', _(u'Cancel'), css_class="btn btn-link"))
 
 
 class BaseStudentFormView(object):

@@ -27,11 +27,6 @@ function initJournal() {
 }
 
 
-$(document).ready(function(){
-  initJournal();
-});
-
-
 function initGroupSelector() {
   // look up select element with groups and attach our even handler
   // on field "change" event
@@ -63,7 +58,7 @@ function initDateFields() {
 
 
 function initEditStudentPage() {
-  $('a.student-edit-form-link').click(function(event){
+  $('a.student-edit-form-link, #student-add-form-link').click(function(event){
     var link = $(this);
     $.ajax({
       'url': link.attr('href'),
@@ -115,6 +110,79 @@ function initEditStudentForm(form, modal) {
       return false;
     },
     'success': function(data, status, xhr) {
+      var html = $(data), newform = html.find('#status_message');
+      // copy alert to modal window
+      modal.find('.modal-body').html(html.find('.alert'));
+      // copy form to modal if we found it in server response
+      //if (newform.length > 0) {
+      //  modal.find('.modal-body').append(newform);
+        // initialize form fields and buttons
+      //  initEditStudentForm(newform, modal);
+      //} else {
+        // if no form, it means success and we need to reload page
+        // to get updated students list;
+        // reload after 2 seconds, so that user can read
+        // success message
+        setTimeout(function(){location.reload(true);}, 500);
+      //}
+    }
+  });
+}
+
+// ------- edit group modal window --------
+function initEditGroupPage() {
+  $('a.group-edit-form-link, #group-add-form-link').click(function(event){
+    var link = $(this);
+    $.ajax({
+      'url': link.attr('href'),
+      'dataType': 'html',
+      'type': 'get',
+      'success': function(data, status, xhr){
+        // check if we got successfull response from the server
+        if (status != 'success') {
+          alert(gettext('There was an error on the server. Please, try again a bit later.'));
+          return false;
+        }
+        // update modal window with arrived content from the server
+        var modal = $('#myModal'),
+            html = $(data),
+            form = html.find('#content-column form');
+        modal.find('.modal-title').html(html.find('#content-column h2').text());
+        modal.find('.modal-body').html(form);
+        // init our edit form
+        initEditGroupForm(form, modal);
+        // setup and show modal window finally
+        modal.modal({
+          'keyboard': false,
+          'backdrop': false,
+          'show': true
+        });
+      },
+      'error': function(){
+        alert(gettext('There was an error on the server. Please, try again a bit later.'));
+        return false;
+      }
+      });
+    return false;
+    });
+}
+
+function initEditGroupForm(form, modal) {
+  // attach datepicker
+  initDateFields();
+  // close modal window on Cancel button click
+    form.find('input[name="cancel_button"]').click(function(event){
+    modal.modal('hide');
+    return false;
+  });
+  // make form work in AJAX mode
+  form.ajaxForm({
+    'dataType': 'html',
+    'error': function(){
+      alert(gettext('There was an error on the server. Please, try again a bit later.'));
+      return false;
+    },
+    'success': function(data, status, xhr) {
       var html = $(data), newform = html.find('#content-column form');
       // copy alert to modal window
       modal.find('.modal-body').html(html.find('.alert'));
@@ -122,10 +190,10 @@ function initEditStudentForm(form, modal) {
       if (newform.length > 0) {
         modal.find('.modal-body').append(newform);
         // initialize form fields and buttons
-        initEditStudentForm(newform, modal);
+        initEditGroupForm(newform, modal);
       } else {
         // if no form, it means success and we need to reload page
-        // to get updated students list;
+        // to get updated groups list;
         // reload after 2 seconds, so that user can read
         // success message
         setTimeout(function(){location.reload(true);}, 500);
@@ -133,6 +201,23 @@ function initEditStudentForm(form, modal) {
     }
   });
 }
+// ------ end group edit modal window -----------
+
+// ------ image avatar in to modal window -------
+function initImgZoom() {
+  $('.img-circle').click(function(event){
+    var link = $(this);
+        var modal = $('#myModal');
+        modal.find('.modal-body').html("<img src='"+link.attr('src')+"'width='565'>");
+        modal.modal({
+          'keyboard': true,
+          'backdrop': true,
+          'show': true
+        });
+    return false;
+    });
+}
+// ------ end image avatar in to modal window -------
 
 
 
@@ -141,4 +226,6 @@ $(document).ready(function(){
   initGroupSelector();
   initDateFields();
   initEditStudentPage();
+  initEditGroupPage();
+  initImgZoom();
 });

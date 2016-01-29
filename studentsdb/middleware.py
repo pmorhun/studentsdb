@@ -21,9 +21,9 @@ class RequestTimeMiddleware(object):
 
         # calculate request execution time
         request.end_time = datetime.now()
-        if 'text/html' in response.get('Content-Type', '') and DEBUG:
-            response.write('<br />Request took: %s' % str(
-                request.end_time - request.start_time))
+        #if 'text/html' in response.get('Content-Type', '') and DEBUG:
+        #    response.write('<br />Request took: %s' % str(
+        #        request.end_time - request.start_time))
             #soup = BeautifulSoup(str(response))
             #gen_time = soup.div("gen_time")
             #gen_time.string = 'test_00000000000000000'

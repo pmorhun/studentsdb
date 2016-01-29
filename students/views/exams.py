@@ -6,6 +6,8 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView
 from django.forms import ModelForm
+from django.utils.translation import ugettext as _
+
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 from crispy_forms.bootstrap import FormActions
@@ -40,7 +42,7 @@ class ExamView(ListView):
         context['exams'] = exams
         context['reverse_begin'] = reverse_begin
         # apply pagination, 10 students per page
-        context = paginate(exams, 4, self.request, context, var_name='exams')
+        context = paginate(exams, 7, self.request, context, var_name='exams')
         # finally return updated context
         # with paginated students
         return context
@@ -49,7 +51,7 @@ class ExamView(ListView):
 class ExamForm(ModelForm):
     class Meta:
         model = Exam
-        fields = {'title', 'date_exam', 'teacher', 'exam_group', 'notes'}
+        fields = ['title', 'date_exam', 'teacher', 'exam_group', 'notes']
 
     def __init__(self, *args, **kwargs):
         super(ExamForm, self).__init__(*args, **kwargs)
@@ -70,17 +72,18 @@ class ExamForm(ModelForm):
         # set form field properties
         self.helper.help_text_inline = True
         self.helper.html5_required = True
-        self.helper.label_class = 'col-sm-2 control-label'
-        self.helper.field_class = 'col-sm-10'
+        self.helper.label_class = 'col-sm-4 control-label'
+        self.helper.field_class = 'col-sm-8'
         # add buttons
         if add_form:
-            submit = Submit('add_button', u'Додати', css_class="btn btn-primary")
+            submit = Submit('add_button', _(u'Add'),
+                            css_class="btn btn-primary")
         else:
-            submit = Submit('save_button', u'Зберегти', css_class="btn btn-primary")
-        self.helper.layout[-1] = FormActions(
-            submit,
-            Submit('cancel_button', u'Скасувати', css_class="btn btn-link"),
-        )
+            submit = Submit('add_button', _(u'Save'),
+                            css_class="btn btn-primary")
+        self.helper.add_input(submit)
+        self.helper.add_input(Submit('cancel_button', _(u'Cancel'), css_class="btn btn-link"))
+
 
 class BaseExamFormView(object):
 

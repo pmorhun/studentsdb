@@ -52,7 +52,7 @@
             {% endif %}
             </td>
             <td>
-              <a title="Редагувати" target="_blank" href="{% url 'students_edit' student.id %}">{{ student.fullname }}</a>
+              <a title="Редагувати" target="_blank" href="{% url 'students_edit' student.id %}" class="student-edit-form-link">{{ student.fullname }}</a>
             </td>
             {% for day in student.days %}
             <td class="day-box">

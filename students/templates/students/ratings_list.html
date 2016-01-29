@@ -6,6 +6,7 @@
 {% block meta_title %}{% trans "Rating" %}{% endblock meta_title %}
 
 {% block title %}{% trans "Rating" %}{% endblock title %}
+{% load pagemore %}
 
 {% block content %}
 
@@ -72,7 +73,12 @@
         </thead>
       {% endwith %}
     <tbody>
-      {% for rating in ratings %}
+{% more_paginator ratings per_page=7 as paginator %}
+{% for rating in paginator.objects %}
+{% if forloop.first %}
+<div class="pagemore-container">
+{% endif %}
+
         <tr>
           <td>
               {% if is_paginated %}
@@ -99,10 +105,28 @@
             </div>
           </td>
         </tr>
-      {% endfor %}
+
+
+{% if forloop.last %}
+</div>
+
+{% if paginator.has_more %}
+<a class="pagemore-paginator" href="?{{paginator.next_query}}">More items...</a>
+{% endif %}
+{% endif %}
+{% endfor %}
+
+
     </tbody>
   </table>
   <!-- End Righting Listing -->
+
+
+
+
+
+
+
 
 {% with object_list=ratings %}
   {% include "students/pagination.html" %}
@@ -111,3 +135,7 @@
 
 {% endblock content %}
 
+<script type="text/javascript" src="{{STATIC_URL}}pagemore/js/pagemore.js"></script>
+<script type="text/javascript">
+    $(function() { $(".pagemore-paginator").pagemore(); });
+</script>

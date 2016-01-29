@@ -41,6 +41,7 @@ INSTALLED_APPS = (
     'crispy_forms',
     'registration',
     'social.apps.django_app.default',
+    'pagemore',
     'students',
     'studentsdb',
 
@@ -94,9 +95,14 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'HOST': 'localhost',
-        'USER': 'students_db_user',
+        #'USER': 'students_db_user',
+        'USER': 'root',
         'PASSWORD': '777',
         'NAME': 'students_db',
+        'TEST': {
+             'CHARSET': 'utf8',
+             'COLLATION': 'utf8_general_ci',
+             }
     }
 }
 

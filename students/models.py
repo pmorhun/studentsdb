@@ -44,7 +44,6 @@ class Student(models.Model):
         null=True,
         on_delete=models.PROTECT)
 
-
     def __unicode__(self):
         """
         :return: student name in django admin
@@ -61,7 +60,7 @@ class MonthJournal(models.Model):
     student = models.ForeignKey('Student', verbose_name=_(u'Student'), blank=False, unique_for_month='date')
     # we only need year and month, so always set day to first day of the month
     date = models.DateField(verbose_name=_(u'Date'), blank=False)
-    #list of days, each says whether student was present or not
+    # list of days, each says whether student was present or not
     present_day1 = models.BooleanField(default=False)
     present_day2 = models.BooleanField(default=False)
     present_day3 = models.BooleanField(default=False)
@@ -98,8 +97,6 @@ class MonthJournal(models.Model):
         return u'%s: %d, %d' % (self.student.last_name, self.date.month, self.date.year)
 
 
-
-
 class Group(models.Model):
     """Group Model"""
     class Meta(object):
@@ -124,6 +121,7 @@ class Group(models.Model):
             return u"%s (%s %s)" % (self.title, self.leader.first_name, self.leader.last_name)
         else:
             return u"%s" % (self.title,)
+
 
 class Exam(models.Model):
     """examination Model"""
@@ -152,7 +150,6 @@ class Exam(models.Model):
     notes = models.TextField(
         blank=True,
         verbose_name=_(u"Note"))
-
 
     def __unicode__(self):
         return u"%s" % (self.title)
@@ -184,7 +181,6 @@ class Rating(models.Model):
     notes = models.TextField(
         blank=True,
         verbose_name=_(u"Note"))
-
 
     def __unicode__(self):
         return u"%s - %s" % (self.ball, self.exam_title )

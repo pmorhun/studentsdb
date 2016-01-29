@@ -56,3 +56,8 @@ display: none;
   margin-top: 30px;
   text-align: right;
 }
+
+/* Forms button style*/
+.form-actions {
+  text-align: right;
+}

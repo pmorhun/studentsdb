@@ -5,6 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView
 from django.forms import ModelForm
+from django.utils.translation import ugettext as _
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 from crispy_forms.bootstrap import FormActions
@@ -14,11 +15,12 @@ from ..models import Group, Student
 from ..util import paginate, get_current_group
 
 # Views for Groups
+
+
 class GroupView(ListView):
     model = Group
     template_name = 'students/groups_list.html'
     context_object_name = 'groups'
-
 
     def get_queryset(self):
         # check if we need to show only one group of students
@@ -29,7 +31,7 @@ class GroupView(ListView):
             # otherwise show all students
             groups = Group.objects.all()
             # try to order rating list
-            #reverse_begin = False
+            # reverse_begin = False
             order_by = self.request.GET.get('order_by', '')
             if order_by in ('title', 'leader'):
                 groups = groups.order_by(order_by)
@@ -37,9 +39,8 @@ class GroupView(ListView):
                     groups = groups.reverse()
             else:
                 groups = groups.order_by('title')
-                #reverse_begin = True
+                # reverse_begin = True
         return groups
-
 
     def get_context_data(self, **kwargs):
         # get context data from TemplateView class
@@ -53,11 +54,10 @@ class GroupView(ListView):
         return context
 
 
-
 class GroupForm(ModelForm):
     class Meta:
         model = Group
-        fields = {'title', 'leader', 'notes'}
+        fields = ['title', 'leader', 'notes']
 
     def __init__(self, *args, **kwargs):
         super(GroupForm, self).__init__(*args, **kwargs)
@@ -79,17 +79,15 @@ class GroupForm(ModelForm):
         # set form field properties
         self.helper.help_text_inline = True
         self.helper.html5_required = True
-        self.helper.label_class = 'col-sm-2 control-label'
-        self.helper.field_class = 'col-sm-10'
+        self.helper.label_class = 'col-sm-4 control-label'
+        self.helper.field_class = 'col-sm-8'
         # add buttons
         if add_form:
             submit = Submit('add_button', u'Додати', css_class="btn btn-primary")
         else:
             submit = Submit('save_button', u'Зберегти', css_class="btn btn-primary")
-        self.helper.layout[-1] = FormActions(
-            submit,
-            Submit('cancel_button', u'Скасувати', css_class="btn btn-link"))
-
+        self.helper.add_input(submit)
+        self.helper.add_input(Submit('cancel_button', u'Скасувати', css_class="btn btn-link"))
 
 
 class BaseGroupFormView(object):
@@ -98,10 +96,10 @@ class BaseGroupFormView(object):
 
     def post(self, request, *args, **kwargs):
         # handle cancel button
-       if request.POST.get('cancel_button'):
-           return HttpResponseRedirect(reverse('groups') + u'?status_message=Зміни скасовано.')
-       else:
-           return super(BaseGroupFormView, self).post(request, *args, **kwargs)
+        if request.POST.get('cancel_button'):
+            return HttpResponseRedirect(reverse('groups') + u'?status_message=Зміни скасовано.')
+        else:
+            return super(BaseGroupFormView, self).post(request, *args, **kwargs)
 
 
 class GroupAddView(BaseGroupFormView, CreateView):
@@ -109,10 +107,12 @@ class GroupAddView(BaseGroupFormView, CreateView):
     form_class = GroupForm
     template_name = 'students/groups_form.html'
 
+
 class GroupUpdateView(BaseGroupFormView, UpdateView):
     model = Group
     form_class = GroupForm
     template_name = 'students/groups_form.html'
+
 
 class GroupDeleteView(BaseGroupFormView, DeleteView):
     model = Group

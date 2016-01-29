@@ -6,6 +6,7 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView
 from django.forms import ModelForm
+from django.utils.translation import ugettext as _
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit
@@ -13,6 +14,7 @@ from crispy_forms.bootstrap import FormActions
 
 from ..models import Rating, Student
 from ..util import paginate
+
 
 class RatingView(ListView):
     model = Rating
@@ -40,17 +42,17 @@ class RatingView(ListView):
             if self.request.GET.get('reverse', '') == '1':
                 ratings = ratings.reverse()
         else:
-            ratings =ratings.order_by('student_ball')
+            ratings = ratings.order_by('student_ball')
             reverse_begin = True
 
         context['ratings'] = ratings
         context['reverse_begin'] = reverse_begin
         # apply pagination, 10 students per page
-        context = paginate(ratings,
-                           4,
-                           self.request,
-                           context,
-                           var_name='ratings')
+        #context = paginate(ratings,
+        #                   7,
+        #                   self.request,
+        #                   context,
+        #                   var_name='ratings')
         # finally return updated context
         # with paginated students
         return context
@@ -60,7 +62,7 @@ class RatingForm(ModelForm):
 
     class Meta:
         model = Rating
-        fields = {'ball', 'date_exam', 'student_ball', 'exam_title', 'notes'}
+        fields = ['ball', 'date_exam', 'student_ball', 'exam_title', 'notes']
 
     def __init__(self, *args, **kwargs):
         super(RatingForm, self).__init__(*args, **kwargs)
@@ -82,8 +84,8 @@ class RatingForm(ModelForm):
         # set form field properties
         self.helper.help_text_inline = True
         self.helper.html5_required = True
-        self.helper.label_class = 'col-sm-2 control-label'
-        self.helper.field_class = 'col-sm-10'
+        self.helper.label_class = 'col-sm-4 control-label'
+        self.helper.field_class = 'col-sm-8'
 
         # add buttons
 
@@ -107,19 +109,15 @@ class RatingForm(ModelForm):
                 submit
             )
         )
-
-
-
         self.helper.layout[-1] = ButtonHolder(
             submit,
             Submit('cancel_button', u'Скасувати', css_class="btn btn-link"),
         )
 
-class BaseRatingFormView(object):
 
+class BaseRatingFormView(object):
     def get_success_url(self):
         return u'%s?status_message=Зміни збережено!' % reverse('ratings')
-
 
     def post(self, request, *args, **kwargs):
         # handle cancel button

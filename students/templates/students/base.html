@@ -77,8 +77,8 @@
       <!-- End subheader -->
 
       <!-- Start Content Columns -->
-      <div class="row" id="content-columns">
-        <div class="col-xs-12" id="content-column">
+      <div class="row" id="status_message">
+        <div class="col-xs-12">
           {% block status_message %}
           {% if messages %}
             <!--{% for message in messages %}-->
@@ -88,6 +88,10 @@
             <div class="alert alert-warning" role="alert">{{ request.GET.status_message }}</div>
           {% endif %}
           {% endblock %}
+        </div>
+      </div>
+      <div class="row" id="content-columns">
+        <div class="col-xs-12" id="content-column">
           <h2>{% block title %}{% endblock title %}</h2>
           {% block content %}{% endblock content %}
         </div>
@@ -104,8 +108,7 @@
       </div>
       <!-- End Container -->
       <!-- Modal Boilerplate -->
-      <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
-        aria-labelledby="myModalLabel" aria-hidden="true">
+      <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="true">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
